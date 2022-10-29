@@ -1,14 +1,25 @@
 import * as dotenv from 'dotenv';
 dotenv.config()
-import { Telegraf } from 'telegraf';
+import TeleBot from 'telebot';
+import texts from './texts';
+import mongoClient from './db';
+import fetchUser from './fetchUser';
+import { User } from './types';
 
-const bot = new Telegraf(process.env.BOT_TOKEN as string);
-bot.start((ctx) => ctx.reply('Welcome'));
-bot.help((ctx) => ctx.reply('Send me a sticker'));
-bot.on('sticker', (ctx) => ctx.reply('👍'));
-bot.hears('hi', (ctx) => ctx.reply('Hey there'));
-bot.launch();
 
-// Enable graceful stop
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
+const bot = new TeleBot({
+  token: process.env.BOT_TOKEN as string,
+});
+
+bot.on('/start', async (msg) => {
+  const user = await fetchUser(msg.chat as User);
+  msg.reply.text(texts.WELCOME_MESSAGE_1);
+  msg.reply.text(JSON.stringify(user));
+});
+
+bot.on('/db', async(msg) => {
+  msg.reply.text(mongoClient.db().databaseName)
+})
+
+
+bot.start();
