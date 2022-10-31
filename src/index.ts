@@ -1,14 +1,33 @@
 import * as dotenv from 'dotenv';
 dotenv.config()
-import { Telegraf } from 'telegraf';
+import texts from './texts';
+import addUserToMongo from './userActions/addUserToMongo';
+import fetchUserByTgId from './userActions/fetchUserByTgId';
+import { UserFormState, UserTelegramData, } from './types';
+import enterPhoneNumberAction from './formDataActions/enterPhoneNumberAction';
+import enterFullNameAction from './formDataActions/enterFullNameAction';
+import { bot } from './setupBot';
 
-const bot = new Telegraf(process.env.BOT_TOKEN as string);
-bot.start((ctx) => ctx.reply('Welcome'));
-bot.help((ctx) => ctx.reply('Send me a sticker'));
-bot.on('sticker', (ctx) => ctx.reply('👍'));
-bot.hears('hi', (ctx) => ctx.reply('Hey there'));
-bot.launch();
+bot.on('/start', async (msg) => {
+  msg.reply.text(texts.WELCOME_MESSAGE);
+  addUserToMongo(msg.chat as UserTelegramData); // on start bot we creating new user in database
+});
 
-// Enable graceful stop
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
+// subscribe to all user messages
+bot.on('*', async (msg) => {
+  if (msg.text === '/start') return; // don't run this function on start command
+
+  const user = await fetchUserByTgId(msg.chat.id);
+
+  switch (user.userFormData?.formState) {
+    case UserFormState.ENTER_PHONE_NUMBER:
+      enterPhoneNumberAction(msg, user);
+      break;
+    case UserFormState.ENTER_FULL_NAME:
+      enterFullNameAction(msg, user);
+    default:
+      break;
+  }
+})
+
+bot.start();
