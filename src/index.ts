@@ -1,25 +1,33 @@
 import * as dotenv from 'dotenv';
 dotenv.config()
-import TeleBot from 'telebot';
 import texts from './texts';
-import mongoClient from './db';
-import fetchUser from './fetchUser';
-import { User } from './types';
-
-
-const bot = new TeleBot({
-  token: process.env.BOT_TOKEN as string,
-});
+import addUserToMongo from './userActions/addUserToMongo';
+import fetchUserByTgId from './userActions/fetchUserByTgId';
+import { UserFormState, UserTelegramData, } from './types';
+import enterPhoneNumberAction from './formDataActions/enterPhoneNumberAction';
+import enterFullNameAction from './formDataActions/enterFullNameAction';
+import { bot } from './setupBot';
 
 bot.on('/start', async (msg) => {
-  const user = await fetchUser(msg.chat as User);
-  msg.reply.text(texts.WELCOME_MESSAGE_1);
-  msg.reply.text(JSON.stringify(user));
+  msg.reply.text(texts.WELCOME_MESSAGE);
+  addUserToMongo(msg.chat as UserTelegramData); // on start bot we creating new user in database
 });
 
-bot.on('/db', async(msg) => {
-  msg.reply.text(mongoClient.db().databaseName)
-})
+// subscribe to all user messages
+bot.on('*', async (msg) => {
+  if (msg.text === '/start') return; // don't run this function on start command
 
+  const user = await fetchUserByTgId(msg.chat.id);
+
+  switch (user.userFormData?.formState) {
+    case UserFormState.ENTER_PHONE_NUMBER:
+      enterPhoneNumberAction(msg, user);
+      break;
+    case UserFormState.ENTER_FULL_NAME:
+      enterFullNameAction(msg, user);
+    default:
+      break;
+  }
+})
 
 bot.start();
