@@ -12,7 +12,7 @@ export enum UserFormState {
 
 export type UserFormData = {
   formState: UserFormState;
-  phoneNumber?: number;
+  phoneNumber?: string;
   fullName?: string;
   dateOfBirthday?: string;
   currentAddress?: string;
