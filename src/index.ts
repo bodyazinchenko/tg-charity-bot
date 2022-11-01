@@ -1,9 +1,9 @@
 import * as dotenv from 'dotenv';
-dotenv.config()
+dotenv.config();
 import texts from './texts';
 import addUserToMongo from './userActions/addUserToMongo';
 import fetchUserByTgId from './userActions/fetchUserByTgId';
-import { UserFormState, UserTelegramData, } from './types';
+import { UserFormState, UserTelegramData } from './types';
 import enterPhoneNumberAction from './formDataActions/enterPhoneNumberAction';
 import enterFullNameAction from './formDataActions/enterFullNameAction';
 import { bot } from './setupBot';
@@ -25,9 +25,10 @@ bot.on('*', async (msg) => {
       break;
     case UserFormState.ENTER_FULL_NAME:
       enterFullNameAction(msg, user);
+      break;
     default:
       break;
   }
-})
+});
 
 bot.start();
