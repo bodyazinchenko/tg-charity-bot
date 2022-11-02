@@ -6,6 +6,7 @@ import fetchUserByTgId from './userActions/fetchUserByTgId';
 import { UserFormState, UserTelegramData } from './types';
 import enterPhoneNumberAction from './formDataActions/enterPhoneNumberAction';
 import enterFullNameAction from './formDataActions/enterFullNameAction';
+import enterBirthdayAction from './formDataActions/enterBirthdayAction';
 import { bot } from './setupBot';
 
 bot.on('/start', async (msg) => {
@@ -25,6 +26,9 @@ bot.on('*', async (msg) => {
       break;
     case UserFormState.ENTER_FULL_NAME:
       enterFullNameAction(msg, user);
+      break;
+    case UserFormState.ENTER_BIRTHDAY_DATE:
+      enterBirthdayAction(msg, user);
       break;
     default:
       break;
