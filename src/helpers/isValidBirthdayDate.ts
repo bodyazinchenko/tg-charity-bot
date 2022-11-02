@@ -1,3 +1,4 @@
+import texts from '../texts';
 import moment from 'moment';
 
 const isValidBirthday = (birthday: string) => {
@@ -6,7 +7,7 @@ const isValidBirthday = (birthday: string) => {
   if (!isBirthdayValid) {
     return {
       isValid: false,
-      message: 'Неправильний формат. Введіть дату в форматі: 01.12.1990'
+      message: texts.INVALID_BIRTHDAY_FORMAT
     };
   }
 
@@ -14,7 +15,7 @@ const isValidBirthday = (birthday: string) => {
   if (birthdayYears < 18 || birthdayYears > 99) {
     return {
       isValid: false,
-      message: 'Вам повинно бути від 18 до 99 років'
+      message: texts.INVALID_BIRTHDAY_YEARS
     };
   }
 

@@ -8,7 +8,7 @@ const enterBirthdayAction = async (msg: any, user: MongoUser) => {
   const { isValid, message } = isValidBirthday(birthdayDay);
   if (isValid) {
     msg.reply.text(texts.ENTER_CURRENT_ADDRESS);
-    // save user full name
+    // save user birthday
     await updateUserFormData(msg.chat.id, {
       ...user.userFormData,
       dateOfBirthday: birthdayDay,

@@ -7,5 +7,6 @@ export default {
   // errors
   INVALID_PHONE_NUMBER: 'Wrong tel number. Ex.: 095-111-11-11',
   INVALID_FULL_NAME: 'TOO LONG STRING. ENTER LESS SYMBOLS, PLEASE...',
-  INVALID_BIRTHDAY_DATE: 'Wrong birthday date. Ex.: 31.12.1990'
+  INVALID_BIRTHDAY_FORMAT: 'Wrong birthday date. Ex.: 31.12.1990',
+  INVALID_BIRTHDAY_YEARS: 'LESS THAN 18 OR MORE THAN 99 YEARS'
 };
