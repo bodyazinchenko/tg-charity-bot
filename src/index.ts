@@ -7,6 +7,10 @@ import { UserFormState, UserTelegramData } from './types';
 import enterPhoneNumberAction from './formDataActions/enterPhoneNumberAction';
 import enterFullNameAction from './formDataActions/enterFullNameAction';
 import enterBirthdayAction from './formDataActions/enterBirthdayAction';
+import enterCurrentCityAction from './formDataActions/enterCurrentCityAction';
+import enterCurrentStreetAction from './formDataActions/enterCurrentStreetAction';
+import enterCurrentBuildingAction from './formDataActions/enterCurrentBuildingAction';
+import enterCurrentAptAction from './formDataActions/enterCurrentAptAction';
 import { bot } from './setupBot';
 
 bot.on('/start', async (msg) => {
@@ -29,6 +33,18 @@ bot.on('*', async (msg) => {
       break;
     case UserFormState.ENTER_BIRTHDAY_DATE:
       enterBirthdayAction(msg, user);
+      break;
+    case UserFormState.ENTER_CURRENT_CITY:
+      enterCurrentCityAction(msg, user);
+      break;
+    case UserFormState.ENTER_CURRENT_STREET:
+      enterCurrentStreetAction(msg, user);
+      break;
+    case UserFormState.ENTER_CURRENT_BUILDING:
+      enterCurrentBuildingAction(msg, user);
+      break;
+    case UserFormState.ENTER_CURRENT_APT:
+      enterCurrentAptAction(msg, user);
       break;
     default:
       break;
